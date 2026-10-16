@@ -96,16 +96,26 @@ export default function VaultReportPanel({
 
   if (!report && !isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full p-8 text-center rounded-2xl border border-slate-800/80 bg-slate-950/60 backdrop-blur-md">
-        <div className="w-14 h-14 rounded-2xl bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center mb-4 text-cyan-400">
-          <Cpu className="w-7 h-7" />
+      <div id="vault" className="engine-empty-state h-full rounded-2xl border border-slate-800/80 bg-slate-950/60">
+        <div className="empty-state-head">
+          <div className="w-14 h-14 rounded-2xl bg-cyan-950/40 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+            <Cpu className="w-7 h-7" />
+          </div>
+          <span className="ready-pill"><span /> READY TO SCAN</span>
         </div>
-        <h3 className="text-base font-semibold text-slate-200 mb-2">
-          Genomic Intelligence Engine Ready
-        </h3>
-        <p className="text-xs text-slate-400 max-w-xs leading-relaxed">
-          Select a clinical benchmark (e.g. <strong className="text-cyan-400">Casgevy</strong> or <strong className="text-cyan-400">Sickle Cell HBB</strong>) or paste a custom sequence on the left, then click <strong className="text-cyan-400">Scan & Align GRCh38</strong> to initiate reference alignment, ClinVar annotation, Doench RS2 scoring, and zk-IP DeSci vault anchoring.
-        </p>
+        <div>
+          <h3 className="text-base font-semibold text-slate-200 mb-2">
+            Genomic Intelligence Engine Ready
+          </h3>
+          <p className="text-xs text-slate-400 leading-relaxed">
+            Choose a clinical benchmark or enter a DNA sequence, then scan to build a reviewable genomic report.
+          </p>
+        </div>
+        <div className="scan-pipeline" aria-label="Analysis steps">
+          <div className="scan-step"><span>01</span><div><strong>Align sequence</strong><small>Map the target to GRCh38</small></div></div>
+          <div className="scan-step"><span>02</span><div><strong>Review evidence</strong><small>Check ClinVar and editing scores</small></div></div>
+          <div className="scan-step"><span>03</span><div><strong>Anchor the report</strong><small>Prepare a verifiable DeSci record</small></div></div>
+        </div>
       </div>
     );
   }
@@ -386,7 +396,7 @@ export default function VaultReportPanel({
       </div>
 
       {/* 2. Verifiable DeSci Vault & Zero-Knowledge IP Panel */}
-      <div className="flex-1 p-4 rounded-2xl border border-slate-800/80 bg-slate-950/80 backdrop-blur-md shadow-lg flex flex-col gap-3">
+      <div id="vault" className="flex-1 p-4 rounded-2xl border border-slate-800/80 bg-slate-950/80 backdrop-blur-md shadow-lg flex flex-col gap-3">
         {/* Panel Header & Tabs */}
         <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
           <div className="flex items-center gap-2">
