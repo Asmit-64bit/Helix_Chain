@@ -240,7 +240,6 @@ graph TD
 │   ├── genomicAlignment.ts      # GRCh38 human reference genome alignment engine
 │   └── zkProof.ts               # Blinded cryptographic commitment & Groth16 zk-SNARK witness
 ├── contracts/
-│   ├── GenomicDeSciVault.sol    # Original vault contract
 │   └── VerifiableDeSciVault.sol # Oracle-governed contract with ClinVar & zk-proof verification
 ├── hardhat.config.js            # Hardhat local EVM node configuration (Chain ID 31337)
 ├── package.json                 # Project dependencies and build scripts
