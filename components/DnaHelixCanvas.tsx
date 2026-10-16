@@ -43,18 +43,6 @@ const BASE_COLORS: Record<string, number> = {
 const MUTANT_COLOR = 0xff0033; // Pulsing Red
 const CURED_COLOR = 0x00ff66; // Glowing Emerald Green
 const VIRTUAL_WINDOW_SIZE = 36; // 30-50 bp virtualized window
-const getFitDistance = (basePairCount: number, pitch = 0.94) =>
-  Math.min(
-    52,
-    Math.max(
-      16,
-      Math.ceil(
-        (Math.max(basePairCount - 1, 1) * pitch) /
-          (2 * Math.tan((45 * Math.PI) / 360)) *
-          1.16
-      )
-    )
-  );
 
 export default function DnaHelixCanvas({
   dnaSequence,
@@ -82,9 +70,7 @@ export default function DnaHelixCanvas({
   // Interactive controls state
   const [autoRotate, setAutoRotate] = useState(true);
   const [hoveredData, setHoveredData] = useState<HoverInfo | null>(null);
-  const [zoomLevel, setZoomLevel] = useState(() =>
-    getFitDistance(Math.min(dnaSequence.length, VIRTUAL_WINDOW_SIZE))
-  );
+  const [zoomLevel, setZoomLevel] = useState(32);
   const [isCrystallographic, setIsCrystallographic] = useState(true);
 
   // Virtualized Sliding Window state
@@ -117,15 +103,6 @@ export default function DnaHelixCanvas({
   const activeWindowSequence = isVirtualized
     ? dnaSequence.slice(windowOffset, windowOffset + VIRTUAL_WINDOW_SIZE)
     : dnaSequence;
-
-  useEffect(() => {
-    setZoomLevel(
-      getFitDistance(
-        activeWindowSequence.length,
-        isCrystallographic ? 0.94 : 0.82
-      )
-    );
-  }, [activeWindowSequence.length, isCrystallographic]);
 
   // Build Procedural Double Helix Geometry
   const buildHelix = useCallback(() => {
@@ -319,7 +296,7 @@ export default function DnaHelixCanvas({
     scene.background = new THREE.Color(0x05070e);
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-    camera.position.set(0, 0, zoomLevel);
+    camera.position.set(0, 2, zoomLevel);
     cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({
@@ -503,16 +480,11 @@ export default function DnaHelixCanvas({
   };
 
   const resetCamera = () => {
-    const fitDistance = getFitDistance(
-      activeWindowSequence.length,
-      isCrystallographic ? 0.94 : 0.82
-    );
-
     if (cameraRef.current && helixGroupRef.current) {
-      cameraRef.current.position.set(0, 0, fitDistance);
+      cameraRef.current.position.set(0, 2, 32);
       helixGroupRef.current.rotation.set(0, 0, 0);
       rotationVelocity.current = { x: 0, y: 0 };
-      setZoomLevel(fitDistance);
+      setZoomLevel(32);
     }
   };
 

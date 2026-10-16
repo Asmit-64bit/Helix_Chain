@@ -67,7 +67,6 @@ export default function Home() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [bannerAlert, setBannerAlert] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState("overview");
   const [walletBalance, setWalletBalance] = useState<number>(10000.0);
   const [justPaid, setJustPaid] = useState<boolean>(false);
 
@@ -241,23 +240,9 @@ export default function Home() {
   };
 
   return (
-    <div className="dashboard-shell min-h-screen bg-[#05070E] text-slate-100 flex font-sans selection:bg-lime-200/40">
-      <aside className="dashboard-sidebar">
-        <div className="dashboard-brand"><span className="brand-mark"><Dna className="h-5 w-5" /></span><span>helix<span className="brand-muted">chain</span></span></div>
-        <div className="sidebar-caption">RESEARCH WORKSPACE</div>
-        <nav className="sidebar-nav" aria-label="Main navigation">
-          <a className={`sidebar-link ${activeSection === "overview" ? "active" : ""}`} href="#overview" aria-current={activeSection === "overview" ? "page" : undefined} onClick={() => setActiveSection("overview")}><Activity /><span>Overview</span></a>
-          <a className={`sidebar-link ${activeSection === "genomic-input" ? "active" : ""}`} href="#genomic-input" aria-current={activeSection === "genomic-input" ? "page" : undefined} onClick={() => setActiveSection("genomic-input")}><Dna /><span>Genomic Input</span></a>
-          <a className={`sidebar-link ${activeSection === "strand-view" ? "active" : ""}`} href="#strand-view" aria-current={activeSection === "strand-view" ? "page" : undefined} onClick={() => setActiveSection("strand-view")}><Layers /><span>3D Strand</span></a>
-          <a className={`sidebar-link ${activeSection === "report" ? "active" : ""}`} href="#report" aria-current={activeSection === "report" ? "page" : undefined} onClick={() => setActiveSection("report")}><BookOpen /><span>Reports</span>{report && <span className="sidebar-count">1</span>}</a>
-          <a className={`sidebar-link ${activeSection === "vault" ? "active" : ""}`} href="#vault" aria-current={activeSection === "vault" ? "page" : undefined} onClick={() => setActiveSection("vault")}><Shield /><span>DeSci Vault</span></a>
-        </nav>
-        <div className="sidebar-promo"><span className="promo-orbit">✳</span><p>Research, verified.</p><span>Securely anchor genomic results and share evidence with your collaborators.</span><button type="button" onClick={() => setIsDetailsOpen(true)}>Project details <span>↗</span></button></div>
-        <div className="sidebar-profile"><div className="profile-avatar">R</div><div><strong>Researcher</strong><span>Principal investigator</span></div><span className="profile-dots">•••</span></div>
-      </aside>
-      <div className="dashboard-content">
+    <div className="min-h-screen bg-[#05070E] text-slate-100 flex flex-col font-sans bg-grid-cyber selection:bg-cyan-500/30">
       {/* Top Banner Status Bar */}
-      <header id="overview" className="dashboard-header border-b border-slate-800/90 bg-[#05070E]/90 backdrop-blur-md sticky top-0 z-50 px-4 lg:px-8 py-3">
+      <header className="border-b border-slate-800/90 bg-[#05070E]/90 backdrop-blur-md sticky top-0 z-50 px-4 lg:px-8 py-3">
         <div className="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-4">
           {/* Brand Identity */}
           <div className="flex items-center gap-3">
@@ -346,12 +331,11 @@ export default function Home() {
       )}
 
       {/* Main 3-Column Responsive Grid Layout */}
-      <div className="dashboard-heading"><div><span className="eyebrow">GENOMIC RESEARCH / OVERVIEW</span><h1>Research Overview</h1><p>Model a gene edit, inspect the evidence, and anchor your findings.</p></div><div className="heading-date">HELIX-CHAIN <span>•</span> GRCh38</div></div>
-      <main className="dashboard-grid flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* =========================================================================
             COLUMN 1: Left Panel (Clinical Benchmarks, Editing Modality, & DNA Input)
             ========================================================================= */}
-        <div id="genomic-input" className="dashboard-column input-column lg:col-span-4 flex flex-col gap-4">
+        <div className="lg:col-span-4 flex flex-col gap-4">
           <div className="p-4 rounded-2xl border border-slate-800/80 bg-slate-950/70 backdrop-blur-md shadow-lg flex flex-col gap-3.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
@@ -600,13 +584,13 @@ export default function Home() {
         {/* =========================================================================
             COLUMN 2: Center Panel (Dynamic 3D Strand Windowing & B-DNA Helix)
             ========================================================================= */}
-        <div id="strand-view" className="dashboard-column strand-column lg:col-span-4 flex flex-col gap-4">
+        <div className="lg:col-span-4 flex flex-col gap-4">
           <div className="flex flex-col h-full gap-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Activity className="w-4 h-4 text-cyan-400" />
                 <h2 className="text-xs font-mono font-semibold uppercase tracking-wider text-slate-200">
-                  DNA Strand Model
+                  Dynamic 3D Strand Windowing
                 </h2>
               </div>
               <div className="flex items-center gap-2 font-mono text-[10px]">
@@ -661,7 +645,7 @@ export default function Home() {
         {/* =========================================================================
             COLUMN 3: Right Panel (ClinVar Report & Verifiable DeSci Vault)
             ========================================================================= */}
-        <div id="report" className="dashboard-column report-column lg:col-span-4 flex flex-col gap-4">
+        <div className="lg:col-span-4 flex flex-col gap-4">
           <VaultReportPanel
             report={report}
             eth={ethVault}
@@ -683,7 +667,6 @@ export default function Home() {
           View Full Specifications
         </button>
       </footer>
-      </div>
 
       {/* Project Details & Architecture Specification Modal */}
       <ProjectDetailsModal
