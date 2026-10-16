@@ -307,7 +307,8 @@ export async function POST(req: NextRequest) {
     const clinvar: ClinVarRecord = await queryClinVar(
       alignment.geneSymbol,
       targetMismatchIndex,
-      sanitizedDna
+      sanitizedDna,
+      diseaseContext
     );
 
     // LAYER 3: CRISPR Guide Design & Real Scoring Algorithms

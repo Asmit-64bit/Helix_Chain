@@ -355,22 +355,41 @@ export default function VaultReportPanel({
         {eth && activeTab === "summary" && (
           <div className="space-y-2.5 text-xs font-mono">
             {/* Grant Disbursement Banner */}
-            <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Award className="w-5 h-5 text-emerald-400" />
-                <div>
-                  <div className="text-[11px] font-bold text-emerald-300">
-                    DeSci Micro-Grant: +{eth.grantAmount} Disbursed
-                  </div>
-                  <div className="text-[9px] text-slate-400">
-                    Oracle-verified (Doench Score &ge; 80% &amp; ClinVar Pathogenic)
+            {eth.grantAwarded ? (
+              <div className="p-2.5 rounded-xl bg-emerald-950/40 border border-emerald-500/40 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Award className="w-5 h-5 text-emerald-400" />
+                  <div>
+                    <div className="text-[11px] font-bold text-emerald-300">
+                      DeSci Micro-Grant: +{eth.grantAmount} Disbursed
+                    </div>
+                    <div className="text-[9px] text-slate-400">
+                      Oracle-verified (Doench Score &ge; 80% &amp; ClinVar Pathogenic)
+                    </div>
                   </div>
                 </div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">
+                  VERIFIED
+                </span>
               </div>
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/40">
-                VERIFIED
-              </span>
-            </div>
+            ) : (
+              <div className="p-2.5 rounded-xl bg-amber-950/40 border border-amber-500/40 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="w-5 h-5 text-amber-400" />
+                  <div>
+                    <div className="text-[11px] font-bold text-amber-300">
+                      Grant Withheld by Oracle: 0.0 ETH
+                    </div>
+                    <div className="text-[9px] text-slate-400">
+                      Oracle policy rejected: Variant is Benign or Doench efficiency &lt; 80%.
+                    </div>
+                  </div>
+                </div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-bold border border-amber-500/40">
+                  WITHHELD
+                </span>
+              </div>
+            )}
 
             {/* Contract Address */}
             <div className="p-2 rounded-xl bg-slate-900/60 border border-slate-800">

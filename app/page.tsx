@@ -201,7 +201,7 @@ export default function Home() {
           );
         } else {
           setBannerAlert(
-            `✓ GRCh38 Locus: ${data.ai.alignment?.geneSymbol} (${data.ai.alignment?.chromosome}) | ClinVar: ${data.ai.clinvar?.clinvarAccession} | Doench: ${data.ai.doenchScoreBreakdown?.normalizedScore}%`
+            `⚠️ GRANT WITHHELD BY ORACLE: ClinVar classified variant as Benign / non-pathogenic. To earn 0.5 ETH grants, select a pathogenic disease target (e.g. Casgevy, Sickle Cell, CFTR).`
           );
         }
       } else {
