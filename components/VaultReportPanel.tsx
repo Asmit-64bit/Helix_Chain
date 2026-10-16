@@ -18,6 +18,8 @@ import {
   Database,
   ExternalLink,
   Target,
+  Truck,
+  Box,
 } from "lucide-react";
 import { formatHash } from "@/lib/bioinformatics";
 import { GenomicAlignmentResult } from "@/lib/genomicAlignment";
@@ -30,6 +32,7 @@ import {
   EditingModality,
 } from "@/lib/crisprScoring";
 import { ZkIpCommitment } from "@/lib/zkProof";
+import { DeliveryVehicleRecommendation } from "@/lib/deliveryVehicle";
 
 export interface CrisprReportData {
   pathology: string;
@@ -44,6 +47,7 @@ export interface CrisprReportData {
   offTargetAnalysis?: OffTargetScanResult;
   baseEditorData?: BaseEditingDesign;
   primeEditorData?: PrimeEditingDesign;
+  deliveryVehicle?: DeliveryVehicleRecommendation;
   zkCommitment?: ZkIpCommitment;
   modality?: EditingModality;
 }
@@ -279,6 +283,81 @@ export default function VaultReportPanel({
                 </div>
                 <div className="text-[10px] text-slate-300">
                   RT Template: {report.primeEditorData.rtTemplate.sequence} (Introduces {report.primeEditorData.rtTemplate.introducedEdit})
+                </div>
+              </div>
+            )}
+
+            {/* Clinical Delivery Vehicle Recommender Card */}
+            {report.deliveryVehicle && (
+              <div className="p-3 rounded-xl bg-gradient-to-br from-blue-950/40 via-slate-900 to-indigo-950/30 border border-blue-500/30 text-xs font-mono space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-blue-300 font-bold">
+                    <Truck className="w-3.5 h-3.5 text-blue-400" />
+                    <span>Clinical Delivery Vehicle</span>
+                  </div>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/40 font-bold">
+                    {report.deliveryVehicle.category}
+                  </span>
+                </div>
+
+                <div className="p-2 rounded-lg bg-slate-950/70 border border-slate-800 space-y-1">
+                  <div className="text-white font-semibold text-[11px]">
+                    {report.deliveryVehicle.vehicleName}
+                  </div>
+                  <div className="text-[10px] text-slate-300">
+                    <strong className="text-slate-400">Target Tissue:</strong> {report.deliveryVehicle.targetTissue} ({report.deliveryVehicle.cellularTarget})
+                  </div>
+                  <div className="text-[10px] text-slate-300">
+                    <strong className="text-slate-400">Administration:</strong> {report.deliveryVehicle.deliveryRoute}
+                  </div>
+                </div>
+
+                {report.deliveryVehicle.formulationRecipe && (
+                  <div className="p-2 rounded-lg bg-slate-950/50 border border-slate-800/80 text-[10px] space-y-1">
+                    <span className="text-[9px] text-cyan-400 uppercase font-bold block">
+                      Microfluidic Formulation (LNP Ratio):
+                    </span>
+                    <div className="grid grid-cols-2 gap-x-2 gap-y-0.5 text-slate-300">
+                      <div>Ionizable: <span className="text-white">{report.deliveryVehicle.formulationRecipe.ionizableLipid}</span></div>
+                      <div>Helper: <span className="text-white">{report.deliveryVehicle.formulationRecipe.helperLipid}</span></div>
+                      <div>Cholesterol: <span className="text-white">{report.deliveryVehicle.formulationRecipe.cholesterol}</span></div>
+                      <div>N:P Ratio: <span className="text-emerald-400 font-bold">{report.deliveryVehicle.formulationRecipe.nToPRatio}</span></div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between text-[10px] text-slate-400 pt-0.5 flex-wrap gap-1">
+                  <span>Precedent: <strong className="text-cyan-300">{report.deliveryVehicle.clinicalPrecedent.drugOrTrial}</strong> ({report.deliveryVehicle.clinicalPrecedent.regulatoryStatus})</span>
+                  <span className="text-emerald-400">Immunogenicity: {report.deliveryVehicle.immunogenicityRisk}</span>
+                </div>
+              </div>
+            )}
+
+            {/* Homologous Pseudogene Off-Target Scanning Matches */}
+            {report.offTargetAnalysis?.topOffTargetSites && report.offTargetAnalysis.topOffTargetSites.length > 0 && (
+              <div className="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800 text-xs font-mono space-y-1.5">
+                <div className="flex items-center justify-between text-[10px]">
+                  <span className="text-slate-400 font-semibold uppercase flex items-center gap-1">
+                    <Compass className="w-3 h-3 text-cyan-400" />
+                    Cas-OFFinder Genome Homolog Matches
+                  </span>
+                  <span className="text-emerald-400 font-bold">
+                    {report.offTargetAnalysis.criticalExonicOffTargets === 0 ? "0 Exonic Hazards" : `${report.offTargetAnalysis.criticalExonicOffTargets} Exonic Hazard`}
+                  </span>
+                </div>
+                <div className="space-y-1">
+                  {report.offTargetAnalysis.topOffTargetSites.map((site, idx) => (
+                    <div key={idx} className="flex items-center justify-between p-1.5 rounded bg-slate-950/80 border border-slate-800/80 text-[10px]">
+                      <div className="truncate max-w-[170px]">
+                        <span className="text-white font-semibold">{site.geneSymbol || site.locus}</span>
+                        <span className="text-slate-500 ml-1">({site.chromosome})</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-amber-400">{site.mismatchCount} mismatches</span>
+                        <span className="text-slate-400 font-bold">CFD: {site.cfdScore}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

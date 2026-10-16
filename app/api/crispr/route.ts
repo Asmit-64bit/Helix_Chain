@@ -25,6 +25,7 @@ import {
   ComprehensiveCrisprDesign,
 } from "@/lib/crisprScoring";
 import { generateZkIpCommitment, ZkIpCommitment } from "@/lib/zkProof";
+import { recommendDeliveryVehicle, DeliveryVehicleRecommendation } from "@/lib/deliveryVehicle";
 
 // Constant addresses and Hardhat keys
 const HARDHAT_RPC = "http://127.0.0.1:8545";
@@ -393,6 +394,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Clinical Delivery Vehicle Formulation Recommendation
+    const deliveryVehicle: DeliveryVehicleRecommendation = recommendDeliveryVehicle(
+      alignment.geneSymbol,
+      diseaseContext,
+      modality
+    );
+
     // LAYER 4: Zero-Knowledge IP (zk-IP) Proof Commitment Generation
     const zkCommitment: ZkIpCommitment = generateZkIpCommitment(
       guideRnaFormatted,
@@ -535,6 +543,7 @@ export async function POST(req: NextRequest) {
       offTargetAnalysis,
       baseEditorData,
       primeEditorData,
+      deliveryVehicle,
       zkCommitment,
       modality,
     };
