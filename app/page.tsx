@@ -67,6 +67,8 @@ export default function Home() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [bannerAlert, setBannerAlert] = useState<string | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState<boolean>(false);
+  const [walletBalance, setWalletBalance] = useState<number>(10000.0);
+  const [justPaid, setJustPaid] = useState<boolean>(false);
 
   // Realtime Sequence Metrics
   const gcContent = calculateGcContent(sequence);
@@ -189,9 +191,19 @@ export default function Home() {
         setReport(data.ai);
         setEthVault(data.eth);
         setMutationIndices(data.ai.mutationIndices || []);
-        setBannerAlert(
-          `✓ GRCh38 Locus: ${data.ai.alignment?.geneSymbol} (${data.ai.alignment?.chromosome}) | ClinVar: ${data.ai.clinvar?.clinvarAccession} | Doench: ${data.ai.doenchScoreBreakdown?.normalizedScore}%`
-        );
+
+        if (data.eth?.grantAwarded) {
+          setWalletBalance((prev) => prev + 0.5);
+          setJustPaid(true);
+          setTimeout(() => setJustPaid(false), 5000);
+          setBannerAlert(
+            `💰 GRANT DISBURSED: +0.50 ETH transferred to your wallet! • Locus: ${data.ai.alignment?.geneSymbol} (${data.ai.alignment?.chromosome}) | ClinVar: ${data.ai.clinvar?.clinvarAccession} | Doench: ${data.ai.doenchScoreBreakdown?.normalizedScore}%`
+          );
+        } else {
+          setBannerAlert(
+            `✓ GRCh38 Locus: ${data.ai.alignment?.geneSymbol} (${data.ai.alignment?.chromosome}) | ClinVar: ${data.ai.clinvar?.clinvarAccession} | Doench: ${data.ai.doenchScoreBreakdown?.normalizedScore}%`
+          );
+        }
       } else {
         throw new Error(data.error || "Bioinformatics engine error");
       }
@@ -262,12 +274,27 @@ export default function Home() {
               <span className="text-slate-200 font-bold">127.0.0.1:8545</span>
             </div>
 
-            <div className="flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-mono">
-              <Coins className="w-3.5 h-3.5 text-amber-400" />
+            <div
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-mono transition-all duration-300 ${
+                justPaid
+                  ? "bg-emerald-950/90 border-emerald-400 text-emerald-200 shadow-[0_0_20px_rgba(0,255,102,0.5)] scale-105"
+                  : "bg-slate-900/80 border-slate-800 text-slate-200"
+              }`}
+            >
+              <Coins
+                className={`w-3.5 h-3.5 ${
+                  justPaid ? "text-emerald-400 animate-bounce" : "text-amber-400"
+                }`}
+              />
               <span className="text-slate-400">Researcher:</span>
               <span className="text-amber-300 font-bold">
-                {ethVault ? `${ethVault.researcherBalance} ETH` : "10,000.50 ETH"}
+                {walletBalance.toFixed(2)} ETH
               </span>
+              {justPaid && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-400 text-slate-950 font-black animate-pulse">
+                  +0.5 ETH PAID!
+                </span>
+              )}
             </div>
 
             <div className="hidden sm:flex items-center gap-2 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-800 text-xs font-mono">
